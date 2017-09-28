@@ -22,5 +22,4 @@ var run = function () {
     });
 };
 run();
-var XLSX = require('util/file');
 //# sourceMappingURL=app.js.map

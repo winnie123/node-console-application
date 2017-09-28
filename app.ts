@@ -32,5 +32,3 @@ let run = (): void => {
 
 
 run();
-
-const XLSX = require('util/file');
