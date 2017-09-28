@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es5",
-    "sourceMap": true
+    "target": "es2015",
+    "sourceMap": true,
+    "outDir": "dist"
   },
+  "files": [
+    "./node_modules/@types/node/index.d.ts"
+  ],
   "exclude": [
     "node_modules"
-  ],
-  "include": ["*.ts"]
+  ]
 }
