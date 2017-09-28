@@ -43,7 +43,6 @@ export default class ExcelHelper {
         return new Promise((resolve, reject) => {
             // 写入内容
             fs.open(path, 'w+', (err, fd) => {
-                err = {};
                 if (err) {
                     reject(err);
                 }

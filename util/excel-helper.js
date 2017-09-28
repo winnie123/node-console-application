@@ -37,7 +37,6 @@ var ExcelHelper = (function () {
         return new Promise(function (resolve, reject) {
             // 写入内容
             fs.open(path, 'w+', function (err, fd) {
-                err = {};
                 if (err) {
                     reject(err);
                 }
