@@ -1,4 +1,4 @@
-export interface CarModel{
+export type CarModel = {
     id: number, // 序号
     typeA: string,// 机具大类
     typeB: string,// 机具小类

@@ -7,9 +7,9 @@ import reject = Promise.reject;
 
 const fs = require('fs');
 
-const Excel = require('exceljs');
+const excel = require('exceljs');
 
-export default class ExcelHelper {
+export class ExcelHelper {
 
     /**
      * @member 读取excel
@@ -17,12 +17,12 @@ export default class ExcelHelper {
      * @param {string} fileName 文件名
      * @returns {Promise<Workbook>}
      */
-    static readExcel<Workbook>(filePath: string, fileName: string): Promise<Workbook> {
+    public static readExcel<Workbook>(filePath: string, fileName: string): Promise<Workbook> {
         let path: string = filePath + fileName;
         if(!fs.existsSync(path)){
             return Promise.reject('文件不存在');
         }
-        let workbook = new Excel.Workbook();
+        let workbook = new excel.Workbook();
         return new Promise<Workbook>((reslove, resject) => {
             workbook.xlsx.readFile(path).then((workbook: Workbook) => {
                 reslove(workbook);
@@ -37,7 +37,7 @@ export default class ExcelHelper {
      * @param {string} fileName 文件名
      * @returns {Promise<void>}
      */
-    static saveExcel<T>(data: string, filePath: string, fileName: string): Promise<void> {
+    public static saveExcel<T>(data: string, filePath: string, fileName: string): Promise<void> {
         let result: boolean = true;
         let path: string = filePath + fileName;
         return new Promise((resolve, reject) => {

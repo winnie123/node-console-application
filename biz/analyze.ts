@@ -1,11 +1,36 @@
-import {Workbook, Worksheet, Row, Cell} from "exceljs";
-import {CarModel} from "../model/carmodel";
+import { Workbook, Worksheet, Row, Cell } from "exceljs";
+import { CarModel } from "../model/carmodel";
 
-export default class Analyze {
+export class Analyze {
 
     /**
-     * @param excel列与属性映射关系
-     * @type {{1: string; 2: string; 3: string; 4: string; 5: string; 6: string; 7: string; 8: string; 9: string; 10: string; 11: string}}
+     * @method 解析excel
+     * @param {Workbook} workbook excel对象
+     * @returns {Array<CarModel>} 数据集合
+     */
+    public static analyzeExcel(workbook: Workbook): CarModel[] {
+        let self = this;
+        if (!workbook || workbook.worksheets.length === 0) {
+            throw Error('worksheet异常');
+        }
+        let arr: CarModel[] = [];
+        // // use workbook
+        let worksheet: Worksheet = workbook.worksheets[0];
+        worksheet.eachRow((row: Row, rowNumber: number) => {
+            if (rowNumber !== 1) {
+                let model: CarModel = {} as CarModel;
+                row.eachCell((cell, colNumber) => {
+                    model[self.attributeMap[colNumber]] = cell.value;
+                });
+                arr.push(model);
+            }
+        });
+
+        return arr;
+    }
+
+    /**
+     * excel列与属性映射关系
      */
     private static attributeMap: object = {
         1: 'id',
@@ -20,32 +45,4 @@ export default class Analyze {
         10: 'n',
         11: 'l'
     };
-
-    /**
-     * @method 解析excel
-     * @param {Workbook} workbook excel对象
-     * @returns {Array<CarModel>} 数据集合
-     */
-    static analyzeExcel(workbook: Workbook): Array<CarModel> {
-        let self = this;
-        if (!workbook || workbook.worksheets.length === 0) {
-            throw Error('worksheet异常');
-        }
-        let arr: Array<CarModel> = [];
-        // // use workbook
-        let worksheet: Worksheet = workbook.worksheets[0];
-        worksheet.eachRow((row: Row, rowNumber: number) => {
-            if(rowNumber!==1){
-                let model : CarModel = {} as CarModel;
-                row.eachCell((cell, colNumber)=>{
-                    model[self.attributeMap[colNumber]] = cell.value;
-                });
-                arr.push(model);
-            }
-        });
-
-        return arr;
-    }
-
-
 }

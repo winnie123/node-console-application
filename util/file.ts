@@ -15,6 +15,6 @@ function readFile(filePath : string,filename : string){
     });
 };
 
-export default {
+export {
     readFile
 }
