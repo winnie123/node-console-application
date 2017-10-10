@@ -8,17 +8,17 @@ export class Analyze {
      * @param {Workbook} workbook excel对象
      * @returns {Array<CarModel>} 数据集合
      */
-    public static analyzeExcel(workbook: Workbook): CarModel[] {
+    public static analyzeExcel<T>(workbook: Workbook): T[] {
         let self = this;
         if (!workbook || workbook.worksheets.length === 0) {
             throw Error('worksheet异常');
         }
-        let arr: CarModel[] = [];
+        let arr: T[] = [];
         // // use workbook
         let worksheet: Worksheet = workbook.worksheets[0];
         worksheet.eachRow((row: Row, rowNumber: number) => {
             if (rowNumber !== 1) {
-                let model: CarModel = {} as CarModel;
+                let model: T = {} as T;
                 row.eachCell((cell, colNumber) => {
                     model[self.attributeMap[colNumber]] = cell.value;
                 });

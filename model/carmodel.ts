@@ -10,5 +10,6 @@ export type CarModel = {
     carNo: string,// 车牌号码
     carCity: string,// 车牌城市名称
     n: number,// 经度
-    l: number// 维度
+    l: number,// 维度
+    a: { name: string, value: number , key : {}}
 }

@@ -1,27 +1,21 @@
-
-import { ExcelHelper } from './util/excel-helper';
-import { Analyze } from './analyze/analyze';
-import { AnalyzeDataModel } from './analyze/datamodel';
-import { Workbook } from "exceljs";
-import { CarModel } from "./model/carmodel";
-
-let run = (): void => {
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var excel_helper_1 = require("./util/excel-helper");
+var datamodel_1 = require("./analyze/datamodel");
+var run = function () {
     console.log('程序启动。。。');
     console.log('开始读取文件');
-    const index = 1;
+    var index = 1;
     // const filename = 'data.xlsx';
-    const filename = 'xyz.xlsx';
+    var filename = 'xyz.xlsx';
     // 读取excel
-    ExcelHelper.readExcel('res/', filename).then((workbook: Workbook) => {
+    excel_helper_1.ExcelHelper.readExcel('res/', filename).then(function (workbook) {
         console.log('开始解析文件');
-        let data: string = '';
+        var data = '';
         try {
             // 解析excel
             // let arr: CarModel[] = Analyze.analyzeExcel(workbook);
-
-            let result = AnalyzeDataModel.analyzeToModel(workbook, index);
-
+            var result = datamodel_1.AnalyzeDataModel.analyzeToModel(workbook, index);
             // data = JSON.stringify(arr);
             data = result;
             console.log('文件解析成功');
@@ -32,15 +26,14 @@ let run = (): void => {
             Promise.reject(ex);
         }
         // 写入excel
-        ExcelHelper.saveExcel(data, 'res/', 'data.json').then(() => {
+        excel_helper_1.ExcelHelper.saveExcel(data, 'res/', 'data.json').then(function () {
             console.log('文件写入完成');
-        }).catch((err) => {
+        }).catch(function (err) {
             Promise.reject(err);
         });
-    }).catch((err) => {
+    }).catch(function (err) {
         console.log('系统异常：' + err.message.toString());
     });
 };
-
-
 run();
+//# sourceMappingURL=app.js.map
