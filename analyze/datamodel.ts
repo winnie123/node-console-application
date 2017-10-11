@@ -23,7 +23,7 @@ export class AnalyzeDataModel {
         let modelStr: string = '';
         // 递归解析属关系，生成类型
         refs.forEach((item: categroyRefsModel) => {
-            modelStr += this.initModel(item);
+            modelStr += `${this.initModel(item)},`;
         });
 
         modelStr = `{${modelStr}}`;
@@ -34,19 +34,20 @@ export class AnalyzeDataModel {
     private static cashRefs: categroyRefsModel[] = [];
     private static objectCategory: string[] = ['List', 'Price', 'NullableClass'];
     private static categoryMap: object = {
-        // 'List': 'Array<T>',
-        'Enum': 'enum',
-        'int4': 'number',
+        'List': 'Array<T>',
+        'Enum': 'number',
+        'Int4': 'number',
         'Dynamic': 'number',
-        'int20': 'number',
+        'Int20': 'number',
         'Code8': 'string',
-        'Boolean': 'bool',
+        'Boolean': 'boolean',
         'Decimal1': 'number',
-        'int10': 'number',
+        'Int10': 'number',
         'Code2': 'string',
         'DateTime': 'string',
-        'Price': 'Price'
-        // 'NullableClass': 'NullableClass'
+        'Price': 'Price',
+        'NullableClass': '',
+        'Class' : ''
     };
 
 
@@ -64,16 +65,13 @@ export class AnalyzeDataModel {
             colName: 'Name'
         },
         6: {
-            colName: 'Name'
-        },
-        10: {
             colName: 'ShortName'
         },
-        11: {
+        7: {
             colName: 'Type'
         },
-        12: {
-            colName: 'MetaData'
+        8: {
+            colName: 'Metadata'
         }
     }
 
@@ -93,7 +91,15 @@ export class AnalyzeDataModel {
                 type: '',
                 metadata: ''
             }
-            if (!refs.length || colNumber === 2) {// 直接将根节点对象，保存到集合中
+
+            let lastRef =refs.length && refs[refs.length-1];// 获取上一行数据对象
+            if (!refs.length) {// 直接将根节点对象，保存到集合中
+                    refs.push(newAttr);
+            }
+            else if(lastRef && this.isRowspan(lastRef,newAttr.attribute)){// 判断是否是合并行
+                return;// 如果是合并行，直接跳过
+            }
+            else if(colNumber === 2){
                 refs.push(newAttr);
             }
             else {// 如果不是根节点，保存到父节点中
@@ -116,7 +122,6 @@ export class AnalyzeDataModel {
         }
     }
 
-
     /**
      * 构建model类，生成字符串
      * @param ref 属性关系对象
@@ -133,23 +138,31 @@ export class AnalyzeDataModel {
      * @param ref 属性关系对象
      */
     private static initCategroy(ref: categroyRefsModel): string {
-        let result = '';
+        let str : string = '';
         // 如果没有子元素，直接设置类型
         if (!ref.value.length) {
-            result = this.setColAttribute(this.categoryMap[ref.metadata]);
+            str = this.setColAttribute(this.categoryMap[ref.metadata]);
         }
         else {// 如果有子元素，递归设置类型
+            let result : string[] = [];
             ref.value.forEach((item: categroyRefsModel) => {
-                result += this.initModel(item);// 设置完成后进行拼接
-                if (this.categoryMap[ref.metadata] === 'Array<T>') {
-                    result = `${result}[]`;
-                }
+                result.push(`${this.initModel(item)}`)// 设置完成后进行拼接
             });
-            result = `{${result}}`;
+            str = result.join(',');
+            str = `{${str}}`;
+            str += this.setColAttribute(this.categoryMap[ref.metadata]);
         }
-        return result;
+        return str;
     }
 
+    private static isRowspan(lastRef : categroyRefsModel,currentArribute : string):boolean{
+        let result : boolean = false;
+        lastRef.value.forEach((item:categroyRefsModel)=>{
+            result = this.isRowspan(item,currentArribute);
+        });
+        result = result || lastRef.attribute === currentArribute;
+        return result;
+    }
 
     private static setColValue(modelObj: object, colName: string, colValue: string): object {
         modelObj[colName] = colValue;
@@ -164,11 +177,14 @@ export class AnalyzeDataModel {
                 result = this.setPriceCategory();
                 break;
             }
+            case 'Array<T>' : {
+                result = '[]';
+            }
         }
         return result;
     }
 
     private static setPriceCategory(): string {
-        return '';
+        return `{value:number}`;
     }
 }

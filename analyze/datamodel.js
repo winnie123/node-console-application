@@ -22,7 +22,7 @@ var AnalyzeDataModel = /** @class */ (function () {
         var modelStr = '';
         // 递归解析属关系，生成类型
         refs.forEach(function (item) {
-            modelStr += _this.initModel(item);
+            modelStr += _this.initModel(item) + ",";
         });
         modelStr = "{" + modelStr + "}";
         return modelStr;
@@ -42,7 +42,14 @@ var AnalyzeDataModel = /** @class */ (function () {
                 type: '',
                 metadata: ''
             };
-            if (!refs.length || colNumber === 2) {
+            var lastRef = refs.length && refs[refs.length - 1]; // 获取上一行数据对象
+            if (!refs.length) {
+                refs.push(newAttr);
+            }
+            else if (lastRef && this.isRowspan(lastRef, newAttr.attribute)) {
+                return; // 如果是合并行，直接跳过
+            }
+            else if (colNumber === 2) {
                 refs.push(newAttr);
             }
             else {
@@ -80,56 +87,69 @@ var AnalyzeDataModel = /** @class */ (function () {
      */
     AnalyzeDataModel.initCategroy = function (ref) {
         var _this = this;
-        var result = '';
+        var str = '';
         // 如果没有子元素，直接设置类型
         if (!ref.value.length) {
-            result = this.setColAttribute(this.categoryMap[ref.metadata], ref.type);
+            str = this.setColAttribute(this.categoryMap[ref.metadata]);
         }
         else {
+            var result_1 = [];
             ref.value.forEach(function (item) {
-                result += _this.initModel(item); // 设置完成后进行拼接
-                if (_this.categoryMap[ref.metadata] === 'Array<T>') {
-                    result = result + "[]";
-                }
+                result_1.push("" + _this.initModel(item)); // 设置完成后进行拼接
             });
-            result = "{" + result + "}";
+            str = result_1.join(',');
+            str = "{" + str + "}";
+            str += this.setColAttribute(this.categoryMap[ref.metadata]);
         }
+        return str;
+    };
+    AnalyzeDataModel.isRowspan = function (lastRef, currentArribute) {
+        var _this = this;
+        var result = false;
+        lastRef.value.forEach(function (item) {
+            result = _this.isRowspan(item, currentArribute);
+        });
+        result = result || lastRef.attribute === currentArribute;
         return result;
     };
     AnalyzeDataModel.setColValue = function (modelObj, colName, colValue) {
         modelObj[colName] = colValue;
         return modelObj;
     };
-    AnalyzeDataModel.setColAttribute = function (category, categoryType) {
+    AnalyzeDataModel.setColAttribute = function (category) {
         var result = category;
         switch (category) {
             case 'Price': {
                 result = this.setPriceCategory();
                 break;
             }
+            case 'Array<T>': {
+                result = '[]';
+            }
         }
         return result;
     };
     AnalyzeDataModel.setPriceCategory = function () {
-        return '';
+        return "{value:number}";
     };
     AnalyzeDataModel.currentArribute = [];
     AnalyzeDataModel.cashRefs = [];
     AnalyzeDataModel.objectCategory = ['List', 'Price', 'NullableClass'];
     AnalyzeDataModel.categoryMap = {
-        // 'List': 'Array<T>',
-        'Enum': 'enum',
-        'int4': 'number',
+        'List': 'Array<T>',
+        'Enum': 'number',
+        'Int4': 'number',
         'Dynamic': 'number',
-        'int20': 'number',
+        'Int20': 'number',
         'Code8': 'string',
-        'Boolean': 'bool',
+        'Boolean': 'boolean',
         'Decimal1': 'number',
-        'int10': 'number',
+        'Int10': 'number',
         'Code2': 'string',
         'DateTime': 'string',
-        'Price': 'Price'
-        // 'NullableClass': 'NullableClass'
+        'Price': 'Price',
+        'NullableClass': '',
+        'Class': ''
     };
     AnalyzeDataModel.colNames = {
         2: {
@@ -145,16 +165,13 @@ var AnalyzeDataModel = /** @class */ (function () {
             colName: 'Name'
         },
         6: {
-            colName: 'Name'
-        },
-        10: {
             colName: 'ShortName'
         },
-        11: {
+        7: {
             colName: 'Type'
         },
-        12: {
-            colName: 'MetaData'
+        8: {
+            colName: 'Metadata'
         }
     };
     return AnalyzeDataModel;
