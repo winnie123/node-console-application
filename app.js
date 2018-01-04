@@ -1,23 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var excel_helper_1 = require("./util/excel-helper");
-var datamodel_1 = require("./analyze/datamodel");
+var AnalyzeFactory = require("./analyze/factory");
 var run = function () {
     console.log('程序启动。。。');
     console.log('开始读取文件');
     var index = 1;
+    var type = 'asset';
     // const filename = 'data.xlsx';
-    var filename = 'xyz.xlsx';
+    var filename = 'asset.xlsx';
     // 读取excel
     excel_helper_1.ExcelHelper.readExcel('res/', filename).then(function (workbook) {
         console.log('开始解析文件');
         var data = '';
         try {
             // 解析excel
-            // let arr: CarModel[] = Analyze.analyzeExcel(workbook);
-            var result = datamodel_1.AnalyzeDataModel.analyzeToModel(workbook, index);
-            // data = JSON.stringify(arr);
-            data = result;
+            var analyze = AnalyzeFactory.getInstance(type);
+            var arr = analyze.analyzeExcel(workbook);
+            // let result = AnalyzeDataModel.analyzeToModel(workbook, index);
+            data = JSON.stringify(arr);
+            // data = result;
             console.log('文件解析成功');
             console.log('写入文件');
         }

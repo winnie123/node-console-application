@@ -1,18 +1,12 @@
 import { Workbook, Worksheet, Row, Cell } from "exceljs";
-import { CarModel } from "../model/carmodel";
 
-export class Analyze {
-
-    /**
-     * @method 解析excel
-     * @param {Workbook} workbook excel对象
-     * @returns {Array<CarModel>} 数据集合
-     */
-    public static analyzeExcel<T>(workbook: Workbook): T[] {
-        let self = this;
+export class BaseAnalyze{
+    protected attributeMap : object;
+    public analyzeExcel<T>(workbook: Workbook): T[] {
         if (!workbook || workbook.worksheets.length === 0) {
             throw Error('worksheet异常');
         }
+        let self = this;
         let arr: T[] = [];
         // // use workbook
         let worksheet: Worksheet = workbook.worksheets[0];
@@ -25,24 +19,6 @@ export class Analyze {
                 arr.push(model);
             }
         });
-
         return arr;
     }
-
-    /**
-     * excel列与属性映射关系
-     */
-    private static attributeMap: object = {
-        1: 'id',
-        2: 'typeA',
-        3: 'typeB',
-        4: 'category',
-        5: 'type',
-        6: 'carType',
-        7: 'name',
-        8: 'carNo',
-        9: 'carCity',
-        10: 'n',
-        11: 'l'
-    };
 }
