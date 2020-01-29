@@ -6,7 +6,7 @@ var Analyze = /** @class */ (function () {
     /**
      * @method 解析excel
      * @param {Workbook} workbook excel对象
-     * @returns {Array<CarModel>} 数据集合
+     * @returns {Array<T>} 数据集合
      */
     Analyze.analyzeExcel = function (workbook) {
         var self = this;

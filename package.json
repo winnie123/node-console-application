@@ -12,14 +12,11 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@types/es6-promise": "0.0.33",
-        "@types/exceljs": "^0.5.2",
-        "@types/node": "^8.0.31",
+        "@types/exceljs": "^0.5.3",
+        "@types/node": "^13.5.1",
         "@types/xlsx": "0.0.36",
         "exceljs": "^0.6.2",
         "ts-xlsx": "0.0.11"
     },
-    "dependencies": {
-        "@types/exceljs": "^0.5.2"
-    }
+    "dependencies": {}
 }

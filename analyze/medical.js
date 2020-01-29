@@ -14,20 +14,21 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var base_1 = require("./base");
-var AssetAnalyze = /** @class */ (function (_super) {
-    __extends(AssetAnalyze, _super);
-    function AssetAnalyze() {
+var MedicalAnalyze = /** @class */ (function (_super) {
+    __extends(MedicalAnalyze, _super);
+    function MedicalAnalyze() {
         var _this = _super.call(this) || this;
         _this.attributeMap = {
-            1: "assetId",
-            2: "name",
-            3: "category",
-            4: "usedDate",
-            5: "desc"
+            1: "company",
+            2: "district",
+            3: "shopName",
+            4: "shopAddress",
+            5: "shopTel",
+            6: "isMedicalInsurance"
         };
         return _this;
     }
-    return AssetAnalyze;
+    return MedicalAnalyze;
 }(base_1.BaseAnalyze));
-exports.AssetAnalyze = AssetAnalyze;
-//# sourceMappingURL=asset.js.map
+exports.MedicalAnalyze = MedicalAnalyze;
+//# sourceMappingURL=medical.js.map

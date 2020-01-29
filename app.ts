@@ -2,7 +2,6 @@
 import { ExcelHelper } from './util/excel-helper';
 import { AnalyzeDataModel } from './analyze/datamodel';
 import { Workbook } from "exceljs";
-import { CarModel } from "./model/carmodel";
 import * as AnalyzeFactory from './analyze/factory';
 
 let run = (): void => {
@@ -10,9 +9,9 @@ let run = (): void => {
     console.log('程序启动。。。');
     console.log('开始读取文件');
     const index = 1;
-    const type = 'asset';
+    const type = 'medical';
     // const filename = 'data.xlsx';
-    const filename = 'asset.xlsx';
+    const filename = 'medical.xlsx';
     // 读取excel
     ExcelHelper.readExcel('res/', filename).then((workbook: Workbook) => {
         console.log('开始解析文件');

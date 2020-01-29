@@ -6,9 +6,9 @@ var run = function () {
     console.log('程序启动。。。');
     console.log('开始读取文件');
     var index = 1;
-    var type = 'asset';
+    var type = 'medical';
     // const filename = 'data.xlsx';
-    var filename = 'asset.xlsx';
+    var filename = 'medical.xlsx';
     // 读取excel
     excel_helper_1.ExcelHelper.readExcel('res/', filename).then(function (workbook) {
         console.log('开始解析文件');
