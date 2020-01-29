@@ -1,9 +1,6 @@
 
 "use strict";
 import {Row, Workbook, Worksheet} from "exceljs";
-import {CarModel} from "../model/carmodel";
-import resolve = Promise.resolve;
-import reject = Promise.reject;
 
 const fs = require('fs');
 
@@ -52,7 +49,7 @@ export class ExcelHelper {
             fs.writeFile(fd, data, (err) => {
                 Promise.reject(err);
             });
-        }).catch(reject);
+        }).catch(Promise.reject);
 
     }
 }

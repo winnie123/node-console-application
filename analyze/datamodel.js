@@ -34,7 +34,7 @@ var AnalyzeDataModel = /** @class */ (function () {
      * @param refs 关系集合
      */
     AnalyzeDataModel.initAttrRefs = function (cell, colNumber, refs) {
-        if (this.colNames[colNumber] && this.colNames[colNumber].colName === 'Name' && cell.value) {
+        if (this.colNames[colNumber] && this.colNames[colNumber].colName === 'Name' && cell.value) { // 记录属性名
             var newAttr = {
                 attribute: cell.value.toString(),
                 value: [],
@@ -43,16 +43,16 @@ var AnalyzeDataModel = /** @class */ (function () {
                 metadata: ''
             };
             var lastRef = refs.length && refs[refs.length - 1]; // 获取上一行数据对象
-            if (!refs.length) {
+            if (!refs.length) { // 直接将根节点对象，保存到集合中
                 refs.push(newAttr);
             }
-            else if (lastRef && this.isRowspan(lastRef, newAttr.attribute)) {
+            else if (lastRef && this.isRowspan(lastRef, newAttr.attribute)) { // 判断是否是合并行
                 return; // 如果是合并行，直接跳过
             }
             else if (colNumber === 2) {
                 refs.push(newAttr);
             }
-            else {
+            else { // 如果不是根节点，保存到父节点中
                 var current = this.cashRefs[this.cashRefs.length - 1];
                 // 重新指向当前节点的父节点，通过index进行查找，只有当index小于当前节点的index时表示是其父节点
                 while (current.index >= colNumber) {
@@ -65,7 +65,7 @@ var AnalyzeDataModel = /** @class */ (function () {
             // 记录到缓存，大部分情况下新节点和上一个节点是父子或兄弟关系，直接从上一个节点查询会减少查询次数。
             this.cashRefs.push(newAttr);
         }
-        else if (this.colNames[colNumber] && this.colNames[colNumber].colName) {
+        else if (this.colNames[colNumber] && this.colNames[colNumber].colName) { // 其他字段
             var current = this.cashRefs[this.cashRefs.length - 1];
             var attributeName = this.colNames[colNumber].colName.toLowerCase();
             current[attributeName] = cell.value && cell.value.toString();
@@ -92,7 +92,7 @@ var AnalyzeDataModel = /** @class */ (function () {
         if (!ref.value.length) {
             str = this.setColAttribute(this.categoryMap[ref.metadata]);
         }
-        else {
+        else { // 如果有子元素，递归设置类型
             var result_1 = [];
             ref.value.forEach(function (item) {
                 result_1.push("" + _this.initModel(item)); // 设置完成后进行拼接

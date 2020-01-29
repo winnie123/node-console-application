@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var reject = Promise.reject;
 var fs = require('fs');
 var excel = require('exceljs');
 var ExcelHelper = /** @class */ (function () {
@@ -46,7 +45,7 @@ var ExcelHelper = /** @class */ (function () {
             fs.writeFile(fd, data, function (err) {
                 Promise.reject(err);
             });
-        }).catch(reject);
+        }).catch(Promise.reject);
     };
     return ExcelHelper;
 }());
