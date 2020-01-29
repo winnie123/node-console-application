@@ -12,7 +12,7 @@ let run = (): void => {
     const index = 1;
     const type = 'asset';
     // const filename = 'data.xlsx';
-    const filename = 'asset.xlsx';
+    const filename = 'medical.xlsx';
     // 读取excel
     ExcelHelper.readExcel('res/', filename).then((workbook: Workbook) => {
         console.log('开始解析文件');
