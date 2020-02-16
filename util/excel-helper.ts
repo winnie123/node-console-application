@@ -1,10 +1,10 @@
 
 "use strict";
-import {Row, Workbook, Worksheet} from "exceljs";
+import { Row, Workbook, Worksheet } from "exceljs";
 
 const fs = require('fs');
 
-const excel = require('exceljs');
+const Excel = require('exceljs');
 
 export class ExcelHelper {
 
@@ -16,10 +16,10 @@ export class ExcelHelper {
      */
     public static readExcel<Workbook>(filePath: string, fileName: string): Promise<Workbook> {
         let path: string = filePath + fileName;
-        if(!fs.existsSync(path)){
+        if (!fs.existsSync(path)) {
             return Promise.reject('文件不存在');
         }
-        let workbook = new excel.Workbook();
+        let workbook = new Excel.Workbook();
         return new Promise<Workbook>((reslove, resject) => {
             workbook.xlsx.readFile(path).then((workbook: Workbook) => {
                 reslove(workbook);
@@ -34,22 +34,23 @@ export class ExcelHelper {
      * @param {string} fileName 文件名
      * @returns {Promise<void>}
      */
-    public static saveExcel<T>(data: string, filePath: string, fileName: string): Promise<void> {
-        let result: boolean = true;
-        let path: string = filePath + fileName;
-        return new Promise((resolve, reject) => {
-            // 写入内容
-            fs.open(path, 'w+', (err, fd) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(fd);
-            });
-        }).then((fd) => {
-            fs.writeFile(fd, data, (err) => {
-                Promise.reject(err);
-            });
-        }).catch(Promise.reject);
+    public static async saveExcel<T>(data: Array<T>, sheetName: string, columns: Array<T>, filePath: string, fileName: string): Promise<void> {
+        const workbook = new Excel.Workbook();
+        const worksheet = workbook.addWorksheet(sheetName);
+        worksheet.columns = columns
+        //  [
+        //     { header: 'Id', key: 'id', width: 10 },
+        //     { header: 'Name', key: 'name', width: 32 },
+        //     { header: 'D.O.B.', key: 'dob', width: 15, }
+        // ];
+        data.forEach((item) => {
+            worksheet.addRow(item)
+        })
+        const path: string = filePath + fileName;
+        // save under export.xlsx
+        await workbook.xlsx.writeFile(path);
+
+        console.log("File is written");
 
     }
 }

@@ -19,8 +19,8 @@ var MedicalAnalyze = /** @class */ (function (_super) {
     function MedicalAnalyze() {
         var _this = _super.call(this) || this;
         _this.attributeMap = {
-            1: "company",
-            2: "district",
+            1: "district",
+            2: "company",
             3: "shopName",
             4: "shopAddress",
             5: "shopTel",

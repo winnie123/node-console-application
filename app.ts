@@ -1,14 +1,14 @@
 
 import { ExcelHelper } from './util/excel-helper';
-import { AnalyzeDataModel } from './analyze/datamodel';
+import { saveFile ,readFile} from './util/file'
+// import { AnalyzeDataModel } from './analyze/datamodel';
 import { Workbook } from "exceljs";
 import * as AnalyzeFactory from './analyze/factory';
 
-let run = (): void => {
+const saveJsonData = (): void => {
 
     console.log('程序启动。。。');
     console.log('开始读取文件');
-    const index = 1;
     const type = 'medical';
     // const filename = 'data.xlsx';
     const filename = 'medical.xlsx';
@@ -20,9 +20,6 @@ let run = (): void => {
             // 解析excel
             let analyze = AnalyzeFactory.getInstance(type);
             let arr: any[] = analyze.analyzeExcel(workbook);
-
-            // let result = AnalyzeDataModel.analyzeToModel(workbook, index);
-
             data = JSON.stringify(arr);
             // data = result;
             console.log('文件解析成功');
@@ -33,7 +30,7 @@ let run = (): void => {
             Promise.reject(ex);
         }
         // 写入excel
-        ExcelHelper.saveExcel(data, 'res/', 'data.json').then(() => {
+        saveFile(data, 'res/', 'data.json').then(() => {
             console.log('文件写入完成');
         }).catch((err) => {
             Promise.reject(err);
@@ -41,7 +38,21 @@ let run = (): void => {
     }).catch((err) => {
         console.log('系统异常：' + err.message.toString());
     });
+
 };
 
+const saveExcelData = (): void => {
+    const type = 'medical';
+    const analyze = AnalyzeFactory.getInstance(type);
+    const columns = analyze.initColums()
+    const readDirPath = 'res/'
+    const readFileName = 'data.json'
+    readFile(readDirPath,readFileName).then((data)=>{
+        const saveDirPath = 'res/'
+        const saveFileName = 'data.xlsx'
+        ExcelHelper.saveExcel(data, 'js error', columns, saveDirPath, saveFileName)
+    })
+}
 
-run();
+// saveJsonData();
+saveExcelData()

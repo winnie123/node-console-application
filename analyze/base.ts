@@ -1,7 +1,7 @@
 import { Workbook, Worksheet, Row, Cell } from "exceljs";
 
-export class BaseAnalyze{
-    protected attributeMap : object;
+export class BaseAnalyze {
+    protected attributeMap: object;
     public analyzeExcel<T>(workbook: Workbook): T[] {
         if (!workbook || workbook.worksheets.length === 0) {
             throw Error('worksheet异常');
@@ -20,5 +20,15 @@ export class BaseAnalyze{
             }
         });
         return arr;
+    }
+
+    public initColums<T>(): T[] {
+        let result = []
+        result = Object.getOwnPropertyNames(this.attributeMap).map(item => {
+            return {
+                header: this.attributeMap[item], key: this.attributeMap[item]
+            }
+        });
+        return result
     }
 }

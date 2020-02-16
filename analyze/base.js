@@ -22,6 +22,16 @@ var BaseAnalyze = /** @class */ (function () {
         });
         return arr;
     };
+    BaseAnalyze.prototype.initColums = function () {
+        var _this = this;
+        var result = [];
+        result = Object.getOwnPropertyNames(this.attributeMap).map(function (item) {
+            return {
+                header: _this.attributeMap[item], key: _this.attributeMap[item]
+            };
+        });
+        return result;
+    };
     return BaseAnalyze;
 }());
 exports.BaseAnalyze = BaseAnalyze;

@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var excel_helper_1 = require("./util/excel-helper");
+var file_1 = require("./util/file");
 var AnalyzeFactory = require("./analyze/factory");
-var run = function () {
+var saveJsonData = function () {
     console.log('程序启动。。。');
     console.log('开始读取文件');
-    var index = 1;
     var type = 'medical';
     // const filename = 'data.xlsx';
     var filename = 'medical.xlsx';
@@ -17,7 +17,6 @@ var run = function () {
             // 解析excel
             var analyze = AnalyzeFactory.getInstance(type);
             var arr = analyze.analyzeExcel(workbook);
-            // let result = AnalyzeDataModel.analyzeToModel(workbook, index);
             data = JSON.stringify(arr);
             // data = result;
             console.log('文件解析成功');
@@ -28,7 +27,7 @@ var run = function () {
             Promise.reject(ex);
         }
         // 写入excel
-        excel_helper_1.ExcelHelper.saveExcel(data, 'res/', 'data.json').then(function () {
+        file_1.saveFile(data, 'res/', 'data.json').then(function () {
             console.log('文件写入完成');
         }).catch(function (err) {
             Promise.reject(err);
@@ -37,5 +36,18 @@ var run = function () {
         console.log('系统异常：' + err.message.toString());
     });
 };
-run();
+var saveExcelData = function () {
+    var type = 'medical';
+    var analyze = AnalyzeFactory.getInstance(type);
+    var columns = analyze.initColums();
+    var readDirPath = 'res/';
+    var readFileName = 'data.json';
+    file_1.readFile(readDirPath, readFileName).then(function (data) {
+        var saveDirPath = 'res/';
+        var saveFileName = 'data.xlsx';
+        excel_helper_1.ExcelHelper.saveExcel(data, 'js error', columns, saveDirPath, saveFileName);
+    });
+};
+// saveJsonData();
+saveExcelData();
 //# sourceMappingURL=app.js.map
